@@ -12,6 +12,7 @@ export type Quiz = {
   questions: Question[];
   difficulty: 'easy' | 'medium' | 'hard';
   numQuestions: number;
+  isAiGenerated: boolean;
 };
 
 export type QuizResult = {

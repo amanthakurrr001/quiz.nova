@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -56,8 +56,13 @@ export default function CreateQuizPage() {
     name: 'questions',
   });
 
+  useEffect(() => {
+    if (user?.isGuest) {
+        router.replace('/dashboard');
+    }
+  }, [user, router]);
+  
   if (user?.isGuest) {
-      router.replace('/dashboard');
       return null;
   }
   
@@ -72,6 +77,7 @@ export default function CreateQuizPage() {
         options: q.options.map(o => o.value),
         correctAnswer: q.correctAnswer,
       })),
+      isAiGenerated: false,
     });
     router.push(`/dashboard/quiz/${newQuiz.id}`);
   };
