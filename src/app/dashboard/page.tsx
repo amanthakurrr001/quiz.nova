@@ -14,37 +14,23 @@ export default function DashboardPage() {
         <div className="space-y-6">
             <h1 className="text-3xl font-bold">Dashboard</h1>
             {user?.isGuest ? (
-                <p>Welcome, Guest! Generate AI quizzes and test your knowledge.</p>
+                <p>Welcome, Guest! Create quizzes and test your knowledge.</p>
             ) : (
                 <p>Welcome back, {user?.name}! Manage your quizzes and track your progress.</p>
             )}
 
-            <div className="grid gap-6 md:grid-cols-2">
+            <div className="grid gap-6 md:grid-cols-1">
                  <Card>
                     <CardHeader>
-                        <CardTitle>Generate AI Quiz</CardTitle>
-                        <CardDescription>Create a new quiz on any topic using AI.</CardDescription>
+                        <CardTitle>Create Manual Quiz</CardTitle>
+                        <CardDescription>Build your own quiz question by question.</CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <Button asChild>
-                            <Link href="/dashboard/generate">New AI Quiz</Link>
+                         <Button asChild>
+                            <Link href="/dashboard/create">New Manual Quiz</Link>
                         </Button>
                     </CardContent>
                 </Card>
-
-                {!user?.isGuest && (
-                     <Card>
-                        <CardHeader>
-                            <CardTitle>Create Manual Quiz</CardTitle>
-                            <CardDescription>Build your own quiz question by question.</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                             <Button asChild>
-                                <Link href="/dashboard/create">New Manual Quiz</Link>
-                            </Button>
-                        </CardContent>
-                    </Card>
-                )}
             </div>
 
             {!user?.isGuest && (
