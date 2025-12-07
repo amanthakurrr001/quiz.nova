@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useForm, useFieldArray, zodResolver } from '@hookform/resolvers/zod';
+import { useForm, useFieldArray } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useQuizData } from '@/hooks/useQuizData';
 import { useAuth } from '@/context/AuthContext';
