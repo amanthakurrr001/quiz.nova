@@ -3,11 +3,23 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useQuizData } from '@/hooks/useQuizData';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+
 
 type AnswersState = { [key: string]: string };
 
@@ -44,6 +56,12 @@ export default function PlayQuizPage() {
         setAnswers((prev) => ({ ...prev, [questionId]: answer }));
     };
 
+    const handlePrevious = () => {
+        if (currentQuestionIndex > 0) {
+            setCurrentQuestionIndex((prev) => prev - 1);
+        }
+    };
+
     const handleNext = () => {
         if (currentQuestionIndex < quiz.questions.length - 1) {
             setCurrentQuestionIndex((prev) => prev + 1);
@@ -71,6 +89,10 @@ export default function PlayQuizPage() {
         }
     };
 
+    const handleDiscard = () => {
+        router.push('/dashboard');
+    }
+
     return (
         <div className="max-w-2xl mx-auto">
             <Card>
@@ -96,11 +118,35 @@ export default function PlayQuizPage() {
                                 </div>
                             ))}
                         </RadioGroup>
-                        <Button onClick={handleNext} className="mt-6 w-full" disabled={!answers[currentQuestion.id]}>
-                            {currentQuestionIndex < quiz.questions.length - 1 ? 'Next' : 'Finish Quiz'}
-                        </Button>
+                        <div className="mt-6 flex justify-between gap-4">
+                            <Button onClick={handlePrevious} variant="outline" disabled={currentQuestionIndex === 0}>
+                                Previous
+                            </Button>
+                            <Button onClick={handleNext} className="flex-grow" disabled={!answers[currentQuestion.id]}>
+                                {currentQuestionIndex < quiz.questions.length - 1 ? 'Next' : 'Finish Quiz'}
+                            </Button>
+                        </div>
                     </div>
                 </CardContent>
+                 <CardFooter className="flex-col gap-4 items-center">
+                    <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                            <Button variant="destructive" className="w-full">Discard Quiz</Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                This will discard your current quiz progress. You can start again later.
+                            </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction onClick={handleDiscard}>Discard</AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
+                </CardFooter>
             </Card>
         </div>
     );
