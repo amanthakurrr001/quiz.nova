@@ -14,7 +14,7 @@ export default function HeroSection() {
         </p>
         <div className="mt-8 flex justify-center gap-4">
           <Button asChild size="lg">
-            <Link href="/dashboard">Get Started</Link>
+            <Link href="/login">Get Started</Link>
           </Button>
         </div>
       </div>

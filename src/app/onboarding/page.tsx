@@ -20,12 +20,12 @@ type OnboardingFormValues = z.infer<typeof onboardingSchema>;
 
 export default function OnboardingPage() {
   const router = useRouter();
-  const { completeOnboarding, isAuthenticated, isLoading, isOnboarded } = useAuth();
+  const { user, completeOnboarding, isAuthenticated, isLoading, isOnboarded } = useAuth();
   
   const form = useForm<OnboardingFormValues>({
     resolver: zodResolver(onboardingSchema),
     defaultValues: {
-      name: '',
+      name: user?.name || '',
       profession: '',
     },
   });
@@ -34,18 +34,28 @@ export default function OnboardingPage() {
     if (!isLoading) {
       if (!isAuthenticated) {
         router.replace('/login');
-      } else if (isOnboarded) {
+      } else if (isOnboarded && !user?.isGuest) {
         router.replace('/dashboard');
       }
     }
-  }, [isLoading, isAuthenticated, isOnboarded, router]);
+  }, [isLoading, isAuthenticated, isOnboarded, user, router]);
+  
+  useEffect(() => {
+    if (user) {
+      form.reset({
+        name: user.name || '',
+        profession: user.profession || '',
+        age: user.age
+      })
+    }
+  }, [user, form]);
 
   const onSubmit = (data: OnboardingFormValues) => {
     completeOnboarding(data);
     router.push('/dashboard');
   };
 
-  if (isLoading || !isAuthenticated || isOnboarded) {
+  if (isLoading || !isAuthenticated || (isOnboarded && !user?.isGuest)) {
     return null; // Or a loading spinner
   }
 

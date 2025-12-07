@@ -12,7 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { KeyRound, LogOut } from 'lucide-react';
+import { KeyRound, LogOut, User as UserIcon } from 'lucide-react';
 
 export function UserNav() {
   const { user, logout } = useAuth();
@@ -22,6 +22,7 @@ export function UserNav() {
   }
   
   const getInitials = (name: string) => {
+    if (!name) return 'G';
     const names = name.split(' ');
     if (names.length > 1) {
       return `${names[0][0]}${names[names.length - 1][0]}`;
@@ -34,8 +35,14 @@ export function UserNav() {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-9 w-9">
-            <AvatarImage src="/avatars/01.png" alt={user.name} />
-            <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
+            {user.isGuest ? (
+                <AvatarFallback><UserIcon /></AvatarFallback>
+            ) : (
+                <>
+                    <AvatarImage src="/avatars/01.png" alt={user.name} />
+                    <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
+                </>
+            )}
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
@@ -43,9 +50,9 @@ export function UserNav() {
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">{user.name}</p>
-            <p className="text-xs leading-none text-muted-foreground">
+            {!user.isGuest && <p className="text-xs leading-none text-muted-foreground">
               {user.email}
-            </p>
+            </p>}
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />

@@ -30,4 +30,5 @@ export type User = {
   profession?: string;
   age?: number;
   apiKey?: string;
+  isGuest?: boolean;
 };

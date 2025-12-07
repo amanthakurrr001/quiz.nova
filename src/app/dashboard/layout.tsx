@@ -23,28 +23,26 @@ import { Logo } from '@/components/Logo';
 import { UserNav } from '@/components/dashboard/UserNav';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, isLoading, isOnboarded, logout } = useAuth();
+  const { user, isAuthenticated, isLoading, logout } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
-    if (!isLoading) {
-      if (!isAuthenticated) {
-        router.replace('/login');
-      } else if (!isOnboarded) {
-        router.replace('/onboarding');
-      }
+    if (!isLoading && !isAuthenticated) {
+      router.replace('/login');
     }
-  }, [isAuthenticated, isLoading, isOnboarded, router]);
+  }, [isAuthenticated, isLoading, router]);
 
-  if (isLoading || !isAuthenticated || !isOnboarded) {
+  if (isLoading || !isAuthenticated) {
     return <div className="flex h-screen w-full items-center justify-center"><p>Loading dashboard...</p></div>;
   }
 
   const navItems = [
     { href: '/dashboard', label: 'Dashboard', icon: Home },
-    { href: '/dashboard/history', label: 'History', icon: History },
-    { href: '/dashboard/growth', label: 'Growth', icon: TrendingUp },
+    ...(user?.isGuest ? [] : [
+      { href: '/dashboard/history', label: 'History', icon: History },
+      { href: '/dashboard/growth', label: 'Growth', icon: TrendingUp },
+    ]),
   ];
 
   return (

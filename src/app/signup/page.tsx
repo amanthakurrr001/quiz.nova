@@ -8,30 +8,22 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Separator } from '@/components/ui/separator';
 
-export default function LoginPage() {
+export default function SignupPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
   const router = useRouter();
-  const { login, loginAsGuest } = useAuth();
+  const { signup } = useAuth();
   const [error, setError] = useState<string | null>(null);
+
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
     try {
-        await login(email, password);
-        router.push('/dashboard');
-    } catch (err: any) {
-        setError(err.message);
-    }
-  };
-
-  const handleGuestLogin = async () => {
-    try {
-        await loginAsGuest();
-        router.push('/dashboard');
+      await signup(email, password, name);
+      router.push('/dashboard');
     } catch (err: any) {
         setError(err.message);
     }
@@ -41,19 +33,22 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-gray-100 dark:bg-gray-900 p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold">Welcome Back</CardTitle>
-          <CardDescription>Log in to your QuizGenius account.</CardDescription>
+          <CardTitle className="text-2xl font-bold">Create an Account</CardTitle>
+          <CardDescription>Sign up to create and save your quizzes.</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            <Button onClick={handleGuestLogin} variant="outline" className="w-full">Continue as Guest</Button>
-            <div className="flex items-center space-x-2">
-                <Separator className="flex-1" />
-                <span className="text-xs text-muted-foreground">OR</span>
-                <Separator className="flex-1" />
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="name">Full Name</Label>
+              <Input
+                id="name"
+                type="text"
+                placeholder="John Doe"
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
             </div>
-          </div>
-          <form onSubmit={handleSubmit} className="space-y-4 mt-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email Address</Label>
               <Input
@@ -65,7 +60,7 @@ export default function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
-             <div className="space-y-2">
+            <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
@@ -76,15 +71,15 @@ export default function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-            {error && <p className="text-destructive text-sm">{error}</p>}
+            {error && <p className="text-red-500 text-sm">{error}</p>}
             <Button type="submit" className="w-full">
-              Log In
+              Sign Up
             </Button>
           </form>
           <div className="mt-4 text-center text-sm">
-            Don't have an account?{' '}
-            <Link href="/signup" className="underline">
-              Sign Up
+            Already have an account?{' '}
+            <Link href="/login" className="underline">
+              Log In
             </Link>
           </div>
         </CardContent>

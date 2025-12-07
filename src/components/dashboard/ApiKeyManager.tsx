@@ -7,14 +7,20 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Info, KeyRound } from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 export function ApiKeyManager() {
   const { user, setApiKey } = useAuth();
-  const [key, setKey] = useState(user?.apiKey || '');
+  const [key, setKey] = useState('');
   const { toast } = useToast();
+
+  useEffect(() => {
+    if (user?.apiKey) {
+      setKey(user.apiKey);
+    }
+  }, [user]);
 
   const handleSave = () => {
     setApiKey(key);
@@ -32,7 +38,7 @@ export function ApiKeyManager() {
           Gemini API Key Management
         </CardTitle>
         <CardDescription>
-          Your Gemini API key is required for AI quiz generation. It is stored locally on your device.
+          Your Gemini API key is required for AI quiz generation. It is stored securely in your browser's local storage.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
