@@ -19,6 +19,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { Download } from 'lucide-react';
 
 
 type AnswersState = { [key: string]: string };
@@ -93,11 +94,41 @@ export default function PlayQuizPage() {
         router.push('/dashboard');
     }
 
+    const handleDownload = () => {
+        if (!quiz) return;
+
+        let content = `Topic: ${quiz.topic}\n`;
+        content += `Difficulty: ${quiz.difficulty}\n\n`;
+        content += `-----------------\n\n`;
+
+        quiz.questions.forEach((q, index) => {
+            content += `Question ${index + 1}: ${q.questionText}\n`;
+            q.options.forEach(opt => {
+                content += `- ${opt}\n`;
+            });
+            content += `Correct Answer: ${q.correctAnswer}\n\n`;
+            content += `-----------------\n\n`;
+        });
+
+        const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${quiz.topic.replace(/\s+/g, '_')}_quiz.txt`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    };
+
     return (
         <div className="max-w-2xl mx-auto">
             <Card>
-                <CardHeader>
+                <CardHeader className="flex flex-row items-center justify-between">
                     <CardTitle className="text-2xl">{quiz.topic}</CardTitle>
+                    <Button variant="outline" size="icon" onClick={handleDownload} aria-label="Download Quiz">
+                        <Download className="h-4 w-4" />
+                    </Button>
                 </CardHeader>
                 <CardContent>
                     <div>
