@@ -29,6 +29,5 @@ export type User = {
   email: string;
   profession?: string;
   age?: number;
-  apiKey?: string;
   isGuest?: boolean;
 };

@@ -1,6 +1,5 @@
 'use client';
 
-import { ApiKeyManager } from '@/components/dashboard/ApiKeyManager';
 import { useAuth } from '@/context/AuthContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -47,8 +46,6 @@ export default function DashboardPage() {
                     </Card>
                 )}
             </div>
-
-            <ApiKeyManager />
 
             {!user?.isGuest && (
                  <Card>

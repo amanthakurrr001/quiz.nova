@@ -8,7 +8,6 @@ import { z } from 'zod';
 import { generateQuizFromTopic } from '@/ai/flows/generate-quiz-from-topic';
 import { parseQuizJson } from '@/lib/utils';
 import { useQuizData } from '@/hooks/useQuizData';
-import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -17,7 +16,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Slider } from '@/components/ui/slider';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 const generateQuizSchema = z.object({
   topic: z.string().min(3, { message: 'Topic must be at least 3 characters long.' }),
@@ -30,7 +28,6 @@ type GenerateQuizFormValues = z.infer<typeof generateQuizSchema>;
 export default function GenerateQuizPage() {
   const router = useRouter();
   const { addQuiz } = useQuizData();
-  const { user } = useAuth();
   const [isGenerating, setIsGenerating] = useState(false);
   const { toast } = useToast();
 
@@ -44,20 +41,8 @@ export default function GenerateQuizPage() {
   });
 
   const onSubmit = async (data: GenerateQuizFormValues) => {
-    if (!user?.apiKey) {
-      toast({
-        variant: 'destructive',
-        title: 'API Key Missing',
-        description: 'Please add your Gemini API key on the dashboard to generate quizzes.',
-      });
-      return;
-    }
-
     setIsGenerating(true);
     try {
-      // Set API key for the flow
-      process.env.GEMINI_API_KEY = user.apiKey;
-      
       const result = await generateQuizFromTopic(data);
       const quizData = parseQuizJson(result.quiz, data.topic, data.difficulty, data.numQuestions);
       
@@ -90,14 +75,6 @@ export default function GenerateQuizPage() {
         <CardDescription>Let AI create a custom quiz for you on any topic.</CardDescription>
       </CardHeader>
       <CardContent>
-        {!user?.apiKey && (
-            <Alert variant="destructive" className="mb-6">
-                <AlertTitle>API Key Required</AlertTitle>
-                <AlertDescription>
-                    You need to set your Gemini API key on the dashboard before you can generate AI quizzes.
-                </AlertDescription>
-            </Alert>
-        )}
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FormField
@@ -156,7 +133,7 @@ export default function GenerateQuizPage() {
               )}
             />
 
-            <Button type="submit" disabled={isGenerating || !user?.apiKey} className="w-full">
+            <Button type="submit" disabled={isGenerating} className="w-full">
               {isGenerating ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />

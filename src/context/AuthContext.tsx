@@ -17,7 +17,6 @@ interface AuthContextType {
   loginAsGuest: () => Promise<void>;
   completeOnboarding: (details: { name: string; profession?: string; age?: number }) => void;
   logout: () => void;
-  setApiKey: (key: string) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -134,13 +133,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     router.push('/');
   }, [auth, updateUserInStateAndStorage, router]);
 
-  const setApiKey = useCallback((key: string) => {
-    if (user) {
-      const updatedUser = { ...user, apiKey: key };
-      updateUserInStateAndStorage(updatedUser);
-    }
-  }, [user, updateUserInStateAndStorage]);
-
   const isOnboarded = !!user?.name;
 
   const value = {
@@ -154,7 +146,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     loginAsGuest,
     completeOnboarding,
     logout,
-    setApiKey,
   };
 
   return (
