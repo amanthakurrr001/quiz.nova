@@ -15,12 +15,12 @@ export default function HistoryPage() {
     const router = useRouter();
 
     useEffect(() => {
-        if (user?.isGuest) {
+        if (user && user.isGuest) {
             router.replace('/dashboard');
         }
     }, [user, router]);
 
-    if (user?.isGuest) {
+    if (!user || user.isGuest) {
         return null;
     }
 
@@ -32,7 +32,17 @@ export default function HistoryPage() {
         <div className="space-y-6">
             <h1 className="text-3xl font-bold">Quiz History</h1>
             {quizzes.length === 0 ? (
-                <p>You haven't created or played any quizzes yet.</p>
+                <Card>
+                    <CardHeader>
+                        <CardTitle>No quizzes yet!</CardTitle>
+                        <CardDescription>You haven't created or played any quizzes. Go to the dashboard to get started.</CardDescription>
+                    </CardHeader>
+                    <CardFooter>
+                         <Button asChild>
+                            <Link href="/dashboard">Back to Dashboard</Link>
+                        </Button>
+                    </CardFooter>
+                </Card>
             ) : (
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                     {quizzes.map((quiz) => {
@@ -46,7 +56,7 @@ export default function HistoryPage() {
                                     </CardDescription>
                                 </CardHeader>
                                 <CardContent>
-                                    <p>{quiz.numQuestions} questions - {quiz.difficulty}</p>
+                                    <p className="capitalize">{quiz.numQuestions} questions - {quiz.difficulty}</p>
                                     {lastResult && (
                                         <p className="text-sm text-muted-foreground mt-2">
                                             Last score: {lastResult.score}%
