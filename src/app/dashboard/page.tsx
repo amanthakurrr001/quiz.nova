@@ -19,7 +19,18 @@ export default function DashboardPage() {
                 <p>Welcome back, {user?.name}! Manage your quizzes and track your progress.</p>
             )}
 
-            <div className="grid gap-6 md:grid-cols-1">
+            <div className="grid gap-6 md:grid-cols-2">
+                 <Card>
+                    <CardHeader>
+                        <CardTitle>Generate AI Quiz</CardTitle>
+                        <CardDescription>Let AI create a quiz for you on any topic.</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                         <Button asChild>
+                            <Link href="/dashboard/generate">New AI Quiz</Link>
+                        </Button>
+                    </CardContent>
+                </Card>
                  <Card>
                     <CardHeader>
                         <CardTitle>Create Manual Quiz</CardTitle>
