@@ -12,11 +12,6 @@ const faqs = [
       'Our AI quiz generator uses Google\'s Gemini API. You provide a topic, number of questions, and difficulty level, and it creates a unique quiz for you in seconds.',
   },
   {
-    question: 'Do I need my own API key?',
-    answer:
-      'Yes, to use the AI generation feature, you will need to provide your own Gemini API key. You can get one from Google AI Studio. Your key is stored securely and is only used for your own quiz generations.',
-  },
-  {
     question: 'Can I save and review my quizzes?',
     answer:
       'Absolutely! All quizzes you create or generate can be saved to your profile. You can retake them anytime and track your performance on the "Growth" page.',
@@ -24,7 +19,7 @@ const faqs = [
   {
     question: 'Is QuizGenius free to use?',
     answer:
-      'The platform itself is free to use. However, using the AI generation feature requires a Gemini API key, which may be subject to Google\'s pricing and usage limits.',
+      'The platform itself is free to use including AI generation. Feel free to generate as many quizzes as you would like.',
   },
 ];
 

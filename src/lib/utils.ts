@@ -7,7 +7,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function parseQuizJson(jsonString: string, topic: string, difficulty: 'easy' | 'medium' | 'hard', numQuestions: number): Quiz | null {
+export function parseQuizJson(jsonString: string, topic: string, difficulty: 'easy' | 'medium' | 'hard', numQuestions: number): Omit<Quiz, 'id' | 'dateCreated'> | null {
   try {
     const rawQuiz = JSON.parse(jsonString);
     const questions: Question[] = [];
@@ -27,6 +27,13 @@ export function parseQuizJson(jsonString: string, topic: string, difficulty: 'ea
         j++;
       }
 
+      // Ensure the correct answer is one of the options
+      if (options.length > 0 && !options.includes(correctAnswer)) {
+        // If not, add it. This is a fallback for potentially inconsistent AI output.
+        const randomIndex = Math.floor(Math.random() * (options.length + 1));
+        options.splice(randomIndex, 0, correctAnswer);
+      }
+      
       if (options.length > 0) {
         questions.push({
           id: uuidv4(),
@@ -39,12 +46,11 @@ export function parseQuizJson(jsonString: string, topic: string, difficulty: 'ea
 
     if (questions.length > 0) {
       return {
-        id: uuidv4(),
         topic,
         questions,
-        dateCreated: new Date().toISOString(),
         difficulty,
-        numQuestions,
+        numQuestions: questions.length, // Use actual length
+        isAiGenerated: true,
       };
     }
 
