@@ -1,3 +1,4 @@
+'use client'
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Bot, Edit3, TrendingUp } from 'lucide-react';
 import Image from 'next/image';
@@ -25,7 +26,7 @@ const features = [
 ];
 
 export default function FeaturesSection() {
-    const images = PlaceHolderImages.filter(img => features.some(f => f.imageId === img.id));
+    const images = PlaceHolderImages;
 
   return (
     <section className="py-20 md:py-32">
