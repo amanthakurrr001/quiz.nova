@@ -88,8 +88,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       localStorage.setItem('quizgenius-user', JSON.stringify(newUser));
     } else {
       localStorage.removeItem('quizgenius-user');
-      localStorage.removeItem('quizgenius-quizzes');
-      localStorage.removeItem('quizgenius-results');
     }
   }, []);
 
